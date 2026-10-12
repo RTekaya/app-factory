@@ -1,0 +1,28 @@
+{
+  "name": "app-factory",
+  "version": "0.1.0",
+  "description": "From an app idea to a finished, tested and documented app: brainstorm, full spec (PRD, UX, design system, architecture, plan), then a block-by-block build with independent review, living docs and handoffs. One command: /factory.",
+  "author": {
+    "name": "Zenith AI",
+    "email": "contact@zenith-ai.dev"
+  },
+  "homepage": "https://github.com/RTekaya/app-factory",
+  "repository": "https://github.com/RTekaya/app-factory",
+  "license": "MIT",
+  "keywords": ["workflow", "multi-agent", "spec", "prd", "app-builder", "planning", "code-review", "handoff"],
+  "agents": [
+    "./skills/factory/roles/product-manager.md",
+    "./skills/factory/roles/ux-designer.md",
+    "./skills/factory/roles/design-system.md",
+    "./skills/factory/roles/architect.md",
+    "./skills/factory/roles/planner.md",
+    "./skills/factory/roles/spec-reviewer.md",
+    "./skills/factory/roles/block-runner.md",
+    "./skills/factory/roles/developer.md",
+    "./skills/factory/roles/developer-escalated.md",
+    "./skills/factory/roles/verifier.md",
+    "./skills/factory/roles/code-reviewer.md",
+    "./skills/factory/roles/doc-keeper.md",
+    "./skills/factory/roles/diagnostician.md"
+  ]
+}

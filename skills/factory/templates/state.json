@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "factory_version": null,
+  "host": null,
+  "capabilities": {
+    "subagents": false,
+    "nested_subagents": false,
+    "ask_choice": false,
+    "headless_cli": false,
+    "permission_rules": false,
+    "notifications": false
+  },
+  "runner": null,
+  "phase": "ideation",
+  "status": "idle",
+  "flags": { "auto_brainstorm": false, "unattended": false, "gates": [] },
+  "current_block": null,
+  "blocked_block": null,
+  "spec_version": 0,
+  "spec_fix_rounds": 0,
+  "auto_retried": [],
+  "blocks_this_run": 0,
+  "cost_usd_total": 0,
+  "pending_question": null,
+  "resume_after": null,
+  "lock": null,
+  "note": null,
+  "updated_at": null
+}

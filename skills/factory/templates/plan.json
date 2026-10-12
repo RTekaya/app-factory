@@ -1,0 +1,23 @@
+{
+  "spec_version": 1,
+  "milestones": [
+    {
+      "id": "M1",
+      "goal": "User-visible outcome of the milestone",
+      "exit_criteria": "What a human can demo",
+      "blocks": ["B01"]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "B01",
+      "title": "Walking skeleton",
+      "milestone": "M1",
+      "deps": [],
+      "complexity": "medium",
+      "status": "todo",
+      "implements": [],
+      "notes": ""
+    }
+  ]
+}

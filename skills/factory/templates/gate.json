@@ -1,0 +1,6 @@
+{
+  "configured": false,
+  "builtin": ["frozen-docs", "secrets"],
+  "commands": [],
+  "timeout_minutes": 20
+}

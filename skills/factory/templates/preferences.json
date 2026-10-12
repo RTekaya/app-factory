@@ -1,0 +1,12 @@
+{
+  "docs_language": "auto",
+  "git_push": "always",
+  "create_private_github_repo": true,
+  "child_permission_mode": "auto",
+  "budget": {
+    "max_usd_total": null,
+    "max_usd_per_child_session": null,
+    "max_blocks_per_run": null,
+    "warn_at_percent": 80
+  }
+}

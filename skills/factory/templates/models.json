@@ -1,0 +1,6 @@
+{
+  "preset": "balanced",
+  "tiers": { "deep": "opus", "standard": "sonnet", "fast": "haiku" },
+  "roles": {},
+  "child_session_model": "standard"
+}

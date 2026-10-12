@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "app-factory",
+  "description": "App Factory: idea → spec → block-by-block build, in one command.",
+  "owner": {
+    "name": "Zenith AI",
+    "email": "contact@zenith-ai.dev"
+  },
+  "plugins": [
+    {
+      "name": "app-factory",
+      "description": "From an app idea to a finished, tested and documented app with one command: /factory.",
+      "source": "./",
+      "category": "development"
+    }
+  ]
+}

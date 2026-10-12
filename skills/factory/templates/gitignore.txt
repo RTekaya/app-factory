@@ -1,0 +1,17 @@
+# App Factory: local run state
+.workflow/state.json
+.workflow/journal.jsonl
+.workflow/runs/
+.claude/settings.local.json
+
+# Secrets: never commit
+.env
+.env.*
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.keystore
+key.properties
+*service-account*.json

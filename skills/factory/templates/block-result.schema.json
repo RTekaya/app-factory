@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": ["block", "outcome", "attempts", "models", "review_rounds", "commit", "pushed", "summary", "next_block", "missing_info"],
+  "properties": {
+    "block": { "type": "string" },
+    "outcome": { "type": "string", "enum": ["done", "blocked", "quota"] },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "models": { "type": "array", "items": { "type": "string" } },
+    "review_rounds": { "type": "integer", "minimum": 0 },
+    "commit": { "type": ["string", "null"] },
+    "pushed": { "type": "boolean" },
+    "summary": { "type": "string" },
+    "next_block": { "type": ["string", "null"] },
+    "missing_info": { "type": "string" },
+    "cost_usd": { "type": ["number", "null"] }
+  },
+  "additionalProperties": false
+}
