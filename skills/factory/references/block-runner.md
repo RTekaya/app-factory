@@ -53,6 +53,8 @@ You are a child session started by runner B.
 
 Track: `attempts` (developer runs), the models used, every verifier digest and reviewer finding.
 
+**Every role runs in the foreground.** Set `run_in_background: false` explicitly on every subagent call, and wait for the role's JSON report before the next step. Never produce the block result, or end your turn, while a role you launched is still running. A result sent too early is wrong, even if you correct it afterwards.
+
 ### 1. Brief
 
 Read the block in `docs/plan.json` (title, milestone, deps, complexity, notes) and its section in `docs/05-plan.md`. Build the developer's task packet:
