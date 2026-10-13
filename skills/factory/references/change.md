@@ -7,9 +7,10 @@ The brief, the PRD and the UX spec are frozen during the build. `/change <reques
 1. Phase `spec` → this is not a change but a spec revision: go to `spec.md` § Revision run.
 2. Status `in_progress` → a block is running. Say so and stop; retry after it ends.
 3. Empty request → ask what should change and why.
-4. Record the request in `docs/DECISIONS.md`.
-5. Set `status=changing`.
-6. **Unfreeze** (Claude Code): remove the three `Edit(docs/0x-…)` rules from `permissions.deny` in `.claude/settings.json`. The gate's `frozen-docs` check allows these files while the status is `changing`.
+4. Record the request in `docs/DECISIONS.md`. The request may start with `--pre-approved`: the user approved the outcome in advance. Record that too, with the user's own words when the request quotes them. Only the user can grant it, by typing it or asking for it; never add it yourself.
+5. If `pending_question` is set and this change is the user's answer to it (for example they chose its `change` option), record the answer as such in `docs/DECISIONS.md` and clear `pending_question`.
+6. Set `status=changing`.
+7. **Unfreeze** (Claude Code, only if the three `Edit(docs/0x-…)` rules are in `permissions.deny`): remove them from `.claude/settings.json`. If the host refuses that edit (auto mode treats it as self-modification), ask the user to approve it or to remove the three lines themselves, then continue. Never work around it. The gate's `frozen-docs` check allows these files while the status is `changing`.
 
 ## 1. Impact analysis
 
@@ -35,10 +36,14 @@ Send each affected owner the request in "revise" mode, with a one-line note of w
 
 ## Approve (status `change_review`)
 
-A change the user asked for is approved by the user. There is no automatic approval, even when unattended. Unattended: store the question as `pending_question` and stop.
+A change the user asked for is approved by the user. There is no automatic approval, even when unattended, with one exception: a `--pre-approved` request whose delta review is `READY` is approved directly (step 4), and the summary of step 1 goes into the final message instead of a question. Otherwise, when unattended, store the question as `pending_question` and stop.
 
 1. Show, in at most 12 lines: the requirement IDs added, changed or deprecated; the screens touched; the ADRs; the blocks added, changed or skipped; the review verdict.
 2. Ask: Approve (recommended if the review is READY) · Revise (the user types feedback; go back to § 2 with it) · Reject (revert the docs with `git revert` of the change commit).
 3. Record the answer in `docs/DECISIONS.md`.
-4. Approve: re-freeze (add the three `deny` rules back), `n = spec_version + 1`, commit `docs(change): approve spec v<n>`, `git tag spec-v<n>`, set `spec_version=n, status=next`. Write `docs/handoffs/phase-approval-v<n>.md`.
+4. Approve:
+   1. Re-freeze: add the three `deny` rules back (with the fallback of `approve.md` § Freeze if the edit is refused).
+   2. If the state has a `blocked_block` that this change resolves, apply `retry` to it (`stops.md`): set it back to `todo` in `docs/plan.json`, put the `wip/` branch and "resolved by change spec v<n>" in its notes, then clear `blocked_block`. Leave `auto_retried` unchanged.
+   3. `n = spec_version + 1`, commit `docs(change): approve spec v<n>`, `git tag spec-v<n>`, set `spec_version=n, status=next`.
+   4. Write `docs/handoffs/phase-approval-v<n>.md`.
 5. Reject: revert, re-freeze, set `status=next`.

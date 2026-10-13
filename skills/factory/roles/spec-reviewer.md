@@ -19,7 +19,7 @@ In "delta review" mode, focus on what changed (`git diff` of `docs/` and `design
 3. **Decisions**: nothing contradicts `docs/DECISIONS.md`.
 4. **Testability**: acceptance criteria that no test or reviewer could verify.
 5. **Architecture fit**: NFRs actually addressed (offline, security, privacy, performance). The quality gate (§8) is runnable non-interactively. The agent permissions (§11) cover the gate commands.
-6. **Plan quality**: B01 is a real walking skeleton that configures the gate; blocks are sized for one session; deps are acyclic and complete; each milestone is demoable.
+6. **Plan quality**: B01 is a real walking skeleton that configures the gate; blocks are sized for one session; deps are acyclic and complete; each milestone is demoable; the plan is not over-split (blocks that could merge, or Should/Could work planned before the core loop works). Over-splitting is non-blocking unless it more than doubles the work.
 7. **Risk**: the 3 assumptions most likely to be wrong, and what each would cost.
 
 ## Output: docs/reviews/spec-review.md (overwrite)

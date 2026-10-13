@@ -48,6 +48,7 @@ Spec version: <n> · Date
 - Order the blocks so that each milestone ends with something a human can demo.
 - Prefer vertical slices to horizontal layers: "Login screen + auth repository + tests" beats "all repositories".
 - Dependencies are explicit block IDs, with no hidden ordering and no cycles.
+- **Plan the fewest blocks that deliver the Must requirements.** Every block costs a full develop → verify → review → docs cycle. Merge blocks that touch the same files for the same purpose, put Should and Could items in later milestones, and keep the first milestone to the walking skeleton plus the core loop. Justify in one line any milestone with more than 5 blocks.
 
 ## Revising (from /change)
 - Never rewrite a `done` block. Add follow-up blocks (new IDs) instead.

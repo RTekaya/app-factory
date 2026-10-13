@@ -31,7 +31,7 @@ For a blocked block, a spec that is not ready, or a no-progress or deadlock stop
 
 | Action | Effect |
 |---|---|
-| `retry` | Block → `todo` in `docs/plan.json` (add the wip branch to its notes); commit `chore(<ID>): retry`; `status=next` |
+| `retry` | Block → `todo` in `docs/plan.json` (add the wip branch to its notes); commit `chore(<ID>): retry`; `status=next`. **Never merge a `wip/` branch into the main branch**: its code has not passed verify and review. The developer brings it back as uncommitted changes (§ Procedure step 1 of `block-runner.md`) |
 | `retry_high` | Same as `retry`, and set the block's `complexity` to `high` |
 | `skip` | Block → `skipped`; warn about the blocks that depend on it (they will wait or deadlock); commit; `status=next` |
 | `change` | Tell the user to run `/change <description>`; stop |
@@ -42,6 +42,7 @@ For a blocked block, a spec that is not ready, or a no-progress or deadlock stop
 ## Blocked block (phase `build`, status `blocked`)
 
 1. If `blocked_block` is set and is **not** in `auto_retried`: retry automatically **once**, without asking. Add the block to `auto_retried`, apply `retry_high`, append a journal line, notify "B07 retried automatically on the deep tier", and go back to the build loop.
+   **Exception**: skip the automatic retry when it cannot help. That is the case when the escalated attempt already ran on the `deep` tier **and** the HANDOFF analysis puts the cause outside the code: the environment or toolchain, a missing credential or service, or a spec or decision conflict. A retry would only repeat the failure. Say why in the journal line (`"auto-retry skipped: <cause>"`) and go to step 2.
 2. Otherwise (second block, deadlock, no progress, dirty tree): run § The diagnosis and the question.
 
 ## Spec not ready

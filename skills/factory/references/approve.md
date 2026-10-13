@@ -22,8 +22,12 @@ Two moments can involve the user. Each is automatic unless the user asked for a 
 2. In `docs/01-prd.md` and `docs/02-ux.md`, set `Status: approved`. Do this **before** step 4, which freezes these files.
 3. Create `CHANGELOG.md` (Keep a Changelog, with a `## [Unreleased]` section) and `docs/TECH_DEBT.md` if they do not exist. Fill the `## Stack & commands` part of the App Factory section in the instruction file with at most 10 lines from architecture §2 and §8.
 4. **Freeze** the brief, the PRD and the UX spec:
+   - Every host: the quality gate's built-in `frozen-docs` check now fails any block that touches them (`block-runner.md` § Gate). This layer always applies.
    - Claude Code (`permission_rules`): add `Edit(docs/00-brief.md)`, `Edit(docs/01-prd.md)` and `Edit(docs/02-ux.md)` to `permissions.deny` in `.claude/settings.json`. These rules block every write to the three files (including Write and shell writes) and apply immediately.
-   - Every host: the quality gate's built-in `frozen-docs` check now fails any block that touches them (`block-runner.md` § Gate).
+
+   **If the host refuses an edit of `.claude/settings.json`** (steps 1 and 4): Claude Code's auto mode treats it as self-modification and denies it. Never work around the refusal (no shell write, no other settings file). Instead:
+   - Interactive session: show the user the exact rules (allow and deny) in one block, and ask them to approve the edit or to add the rules themselves. Record the answer.
+   - Unattended: continue without the native layer. Write the rules to apply in `docs/handoffs/phase-approval-v<n>.md` under "To apply manually", and repeat them in the final summary. The portable `frozen-docs` check still protects the docs, and the auto mode classifier still vets each build command.
 5. `n = spec_version + 1`. Set `phase=build, status=next, spec_version=n, spec_fix_rounds=0, current_block=null, note=null`.
 6. Write `docs/handoffs/phase-approval-v<n>.md` (short: what was approved, the permissions added, the gates).
 7. `git add -A && git commit -m "docs(spec): approve spec v<n>"`, then `git tag spec-v<n>`.

@@ -1,7 +1,7 @@
 ---
 name: factory
 description: App Factory turns an app idea into a finished, tested and documented app. It runs a brainstorm with the user, writes a full spec (PRD, UX, design system, architecture, plan), then builds the app block by block with review, living docs and handoffs. Use only when the user types /factory.
-argument-hint: '["idea"] [--auto-brainstorm] [--gate spec|milestone] [--unattended] [status | config | approve | next-block]'
+argument-hint: '["idea"] [--auto-brainstorm] [--gate spec|milestone] [--unattended] [--runner A|B|C] [status | config | approve | next-block | answer <choice>]'
 disable-model-invocation: true
 ---
 
@@ -36,6 +36,7 @@ Then run this loop: read the state, take the first matching row, do what it says
 | Arguments contain `--child` | `references/block-runner.md` § Child mode (one block, then stop) |
 | `.workflow/state.json` does not exist | `references/bootstrap.md`, then continue the loop |
 | Argument `config` | `references/models.md` § Reconfigure and the preferences questions in `references/bootstrap.md` § Questions, then stop |
+| Argument `answer <choice>` and `pending_question` is set | The user answers the pending question without an interactive prompt. `<choice>` is an option number or label, or free text. Apply `references/stops.md` § Ask a pending question from step 3 (record, clear, apply), then continue the loop. Only the user can type this |
 | `pending_question` is set in the state | `references/stops.md` § Ask a pending question |
 | Another session holds the lock (`references/state.md` § Lock) | Stop and say which session is running and since when |
 | phase `ideation` | `references/brainstorm.md` |
@@ -48,7 +49,7 @@ Then run this loop: read the state, take the first matching row, do what it says
 | phase `build`, status `changing` or `change_review` | `references/change.md` |
 | phase `done` | Final summary (`references/stops.md` § Done), then stop |
 
-The arguments `--auto-brainstorm`, `--gate spec`, `--gate milestone` and `--unattended` are saved in the state on first use (`references/state.md`), so that a later `/factory` with no arguments resumes with the same behaviour.
+`--runner A|B|C` overrides the runner chosen at bootstrap. Write it to `state.runner` and record it in `docs/DECISIONS.md`; refuse a runner the host cannot run (`references/hosts.md`). The arguments `--auto-brainstorm`, `--gate spec`, `--gate milestone` and `--unattended` are saved in the state on first use (`references/state.md`), so that a later `/factory` with no arguments resumes with the same behaviour.
 
 ## Reference map
 

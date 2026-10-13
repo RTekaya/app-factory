@@ -26,6 +26,7 @@ Launch the role `block-runner` (Claude Code: `app-factory:block-runner`) **in th
    ```
    - `<child mode>` is `preferences.child_permission_mode` (default `auto`).
    - Add `--max-budget-usd <n>` only if `preferences.budget.max_usd_per_child_session` is set.
+   - The child must load App Factory too. If SKILL_DIR is not inside the host's installed-plugins folder (Claude Code: `~/.claude/plugins/`), the plugin was loaded with `--plugin-dir`: pass `--plugin-dir <SKILL_DIR>/../..` to the child.
    - On other hosts, use the headless command from `hosts.md`, and drop the flags the host does not have.
 2. Wait for the completion notification. Do not poll in a tight loop. If the host cannot run a background command for an hour, do not use runner B; use C.
 3. Read the result, in this order of preference:
@@ -33,7 +34,9 @@ Launch the role `block-runner` (Claude Code: `app-factory:block-runner`) **in th
    2. `structured_output` in `.workflow/runs/<ID>.out.json`;
    3. the JSON block at the end of its `result` field.
    Take `cost_usd` from `total_cost_usd`.
-4. If the output says the usage limit was reached (`is_error` true, with "limit" or "quota" in the text), the outcome is `quota`. If there is no result at all, the outcome is `blocked`, with the reason "child session ended without a result; see .workflow/runs/<ID>.err.log".
+4. If the output says the usage limit was reached (`is_error` true, with "limit" or "quota" in the text), the outcome is `quota`. If there is no result at all (the child crashed or was killed):
+   - park its partial work exactly like § Procedure 6b step 1 (`wip/<ID>-attempt` branch; the main branch is clean again), and append to the block's `notes` in `docs/plan.json` "interrupted child session, partial work on wip/<ID>-attempt", committed as `chore(<ID>): interrupted run`;
+   - the outcome is `blocked`, with the reason "child session ended without a result; see .workflow/runs/<ID>.err.log". The cause is not in the code, so the automatic retry applies (`stops.md`).
 
 ## Runner C: flat
 
@@ -58,7 +61,8 @@ Read the block in `docs/plan.json` (title, milestone, deps, complexity, notes) a
 - the acceptance criteria, copied verbatim;
 - out of scope, copied verbatim;
 - the decisions to respect, from `docs/DECISIONS.md`;
-- the known pitfalls, from HANDOFF "Attention" and the block's notes (for example a `wip/` branch from an earlier attempt to inspect with `git diff HEAD..wip/<ID>-attempt`).
+- the known pitfalls, from HANDOFF "Attention" and the block's notes.
+- if the notes name a `wip/<ID>-attempt` branch: tell the developer to start from it with `git checkout wip/<ID>-attempt -- .` (restores its files as uncommitted changes, then `git status`), so that the earlier work goes through verify and review like any other change. Never merge or cherry-pick a `wip/` branch onto the main branch.
 
 Models: the developer and the code-reviewer follow the complexity table in `models.md`.
 
