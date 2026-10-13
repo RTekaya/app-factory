@@ -1,6 +1,0 @@
-{
-  "name": "app-factory",
-  "version": "0.0.1",
-  "description": "Spike plugin",
-  "agents": ["./skills/factory/roles/inner.md", "./skills/factory/roles/outer.md"]
-}

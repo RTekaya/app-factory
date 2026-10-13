@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_evals:
+        description: "Run the eval suite (needs the ANTHROPIC_API_KEY secret)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate plugin, marketplace, skills and agents
+        run: |
+          claude plugin validate --strict .
+          claude plugin validate --strict .claude-plugin/plugin.json
+          claude plugin validate --strict skills
+
+      - name: Templates are valid JSON
+        run: |
+          for f in skills/factory/templates/*.json; do
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$f" || { echo "invalid JSON: $f"; exit 1; }
+          done
+
+      - name: No shell scripts in the repository
+        run: |
+          found=$(git ls-files '*.sh' '*.bash' '*.zsh')
+          if [ -n "$found" ]; then echo "Shell scripts are not allowed: $found"; exit 1; fi
+
+      - name: No machine-specific paths
+        run: |
+          if git grep -nE '/(Users|home)/[A-Za-z0-9._-]+/' -- . ':!.github/workflows/ci.yml'; then
+            echo "Remove absolute user paths from the files above"; exit 1
+          fi
+
+  evals:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_evals
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run the eval suite
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: >
+          claude plugin eval .
+          --trust-plugin
+          --allow-tools Bash Write Edit
+          --judge-model sonnet
+          --no-publish
+          --threshold 0.8
